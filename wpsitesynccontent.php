@@ -2,10 +2,10 @@
 /*
 Plugin Name: WPSiteSync for Content
 Plugin URI: https://wpsitesync.com
-Description: Provides features for easily Synchronizing Content between two WordPress sites.
+Description: Provides features for easily Synchronizing Content between two WordPress sites. (modified by ralph from v1.5.3)
 Author: WPSiteSync
 Author URI: https://wpsitesync.com
-Version: 1.5.3
+Version: 991.5.3
 Text Domain: wpsitesynccontent
 Domain path: /language
 
