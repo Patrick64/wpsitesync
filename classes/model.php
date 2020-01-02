@@ -284,7 +284,7 @@ SyncDebug::log(__METHOD__.'() post id=' . $post_id);
 			return $push_data;
 
 		$push_data['post_data'] = (array) $query->posts[0];
-
+		$push_data['sync_time'] = time();
 		// other images connected to the current post ID.
 		if (function_exists('get_attached_media'))
 			$push_data['post_media'] = get_attached_media('', $post_id);

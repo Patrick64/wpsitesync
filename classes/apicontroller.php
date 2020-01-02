@@ -462,6 +462,7 @@ SyncDebug::log(__METHOD__ . '():' . __LINE__. '  performing sync');
 			'source_content_id' => $this->source_post_id,
 			'target_content_id' => $this->post_id,
 			'content_type' => 'post', // $content_type,
+			'last_sync' => isset($_POST['sync_time']) ? $_POST['sync_time'] : ''
 		);
 		$model->save_sync_data($save_sync);
 
@@ -1168,6 +1169,7 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' - post=' . var_export($_POST, TRU
 			'modified' => $post_data->post_modified_gmt,
 			// TODO: add who is currently editing the content
 			'content' => substr(strip_tags($post_data->post_content), 0, 120), // strip_tags(get_the_excerpt($target_post_id)),
+//			'last_sync' => 
 		);
 
 		// featured image info
