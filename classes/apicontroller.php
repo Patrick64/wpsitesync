@@ -416,16 +416,6 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' content: ' . $post_data['post_con
 				if (is_wp_error($res)) {
 SyncDebug::log(__METHOD__.'():' . __LINE__ . ' error in wp_update_post() ' . $res->get_error_message());
 					$response->error_code(SyncApiRequest::ERROR_CONTENT_UPDATE_FAILED, $res->get_error_message());
-				} else {
-					SyncDebug::log(__METHOD__.'():' . __LINE__ . ' update post modified date : ' . print_r([
-						'post_modified'=>$post_data['post_modified'],
-						'post_modified_gmt'=>$post_data['post_modified_gmt'],
-						'ID'=>$post_data['ID']],true) );
-					// also update the date modified
-					// $wpdb->update( $wpdb->posts, array(
-					// 	'post_modified'=>$post_data['post_modified'],
-					// 	'post_modified_gmt' => $post_data['post_modified_gmt']),
-					// 	array('ID'=>$post_data['ID']));
 				}
 			} else {
 				$response->error_code(SyncApiRequest::ERROR_NO_PERMISSION);
@@ -443,11 +433,7 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' check permission for creating new
 				unset($new_post_data['guid']);
 SyncDebug::log(__METHOD__.'():' . __LINE__ . ' content: ' . $post_data['post_content']);
 				$target_post_id = wp_insert_post($new_post_data); // ;here;
-				// // also update the date modified
-				// $wpdb->update( $wpdb->posts, array(
-				// 	'post_modified'=>$post_data['post_modified'],
-				// 	'post_modified_gmt' => $post_data['post_modified_gmt']),
-				// 	array('ID'=>$target_post_id));
+				
 			} else {
 SyncDebug::log(__METHOD__.'():' . __LINE__ . ' user does not have permission to update content');
 				$response->error_code(SyncApiRequest::ERROR_NO_PERMISSION);
@@ -554,11 +540,17 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' handling taxonomies');
 		// this lets add-ons know that the Push operation is complete. Ex: CPT add-on can handle additional taxonomies to update
 SyncDebug::log(__METHOD__.'():'.__LINE__ . " calling action 'spectrom_sync_push_content'");
 		do_action('spectrom_sync_push_content', $target_post_id, $post_data, $response);
+		
 		// also update the date modified
+		SyncDebug::log(__METHOD__.'():' . __LINE__ . ' update post modified date : ' . print_r([
+			'post_modified'=>$post_data['post_modified'],
+			'post_modified_gmt'=>$post_data['post_modified_gmt'],
+			'ID'=>$post_data['ID']],true) );
 		$wpdb->update( $wpdb->posts, array(
 			'post_modified'=>$post_data['post_modified'],
 			'post_modified_gmt' => $post_data['post_modified_gmt']),
 			array('ID'=>$target_post_id));
+
 $temp_post = get_post($target_post_id);
 SyncDebug::log(__METHOD__.'():' . __LINE__ . ' push complete, content=' . $temp_post->post_content);
 	}
