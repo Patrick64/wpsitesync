@@ -417,6 +417,10 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' content: ' . $post_data['post_con
 SyncDebug::log(__METHOD__.'():' . __LINE__ . ' error in wp_update_post() ' . $res->get_error_message());
 					$response->error_code(SyncApiRequest::ERROR_CONTENT_UPDATE_FAILED, $res->get_error_message());
 				} else {
+					SyncDebug::log(__METHOD__.'():' . __LINE__ . ' update post modified date : ' . print_r([
+						'post_modified'=>$post_data['post_modified'],
+						'post_modified_gmt'=>$post_data['post_modified_gmt'],
+						'ID'=>$post_data['ID']],true) );
 					// also update the date modified
 					$wpdb->update( $wpdb->posts, array(
 						'post_modified'=>$post_data['post_modified'],
