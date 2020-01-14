@@ -500,8 +500,8 @@ class SyncSettings extends SyncInput
 		$allowed_roles = $args['value'];
 		foreach ($roles as $role => $caps) {
 			// check for both 'edit_posts' OR 'edit_pages' #245
-			if ((isset($caps['capabilities']['edit_posts']) && $caps['capabilities']['edit_posts']) ||
-				(isset($caps['capabilities']['edit_pages']) && $caps['capabilities']['edit_pages'])) {
+			// if ((isset($caps['capabilities']['edit_posts']) && $caps['capabilities']['edit_posts']) ||
+			// 	(isset($caps['capabilities']['edit_pages']) && $caps['capabilities']['edit_pages'])) {
 				$checked = (FALSE === strpos($allowed_roles, SyncOptions::ROLE_DELIMITER . $role . SyncOptions::ROLE_DELIMITER)) ? '' : ' checked="checked" ';
 				$disabled = '';
 				if ('administrator' === $role) {
@@ -510,7 +510,7 @@ class SyncSettings extends SyncInput
 				}
 				printf('<input type="checkbox" name="spectrom_sync_settings[%s][%s]" %s %s /> %s<br/>',
 					$args['name'], $role, $checked, $disabled, $caps['name']);
-			}
+			// }
 		}
 		if (!empty($args['description']))
 			echo '<p>', esc_html($args['description']), '</p>';
