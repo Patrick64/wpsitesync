@@ -424,7 +424,9 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' error in wp_update_post() ' . $re
 		} else {
 			// NULL === $post, need to create new content
 SyncDebug::log(__METHOD__.'():' . __LINE__ . ' check permission for creating new post from source id#' . $post_data['ID']);
-			if ($this->has_permission('edit_posts')) {
+			// if ($this->has_permission('edit_posts')) {
+			if (SyncOptions::has_cap()) {
+
 				// copy to new array so ID can be unset
 //				$this->_process_gutenberg($post_data);			// handle Gutenberg content- moved to 'push_complete' API call
 				$this->_process_shortcodes($post_data);							// handle shortcodes
@@ -452,7 +454,7 @@ SyncDebug::log(__METHOD__ . '():' . __LINE__. '  performing sync');
 			'source_content_id' => $this->source_post_id,
 			'target_content_id' => $this->post_id,
 			'content_type' => 'post', // $content_type,
-			'last_sync' => isset($_POST['sync_time']) ? $_POST['sync_time'] : ''
+			// 'last_sync' => isset($_POST['sync_time']) ? $_POST['sync_time'] : ''
 		);
 		$model->save_sync_data($save_sync);
 

@@ -51,7 +51,9 @@ SyncDebug::log(__METHOD__."('{$operation}')");
 			$response->error_code(SyncApiRequest::ERROR_SESSION_EXPIRED, $operation);
 			$response->send();
 		}
-		if (!current_user_can('publish_posts')) {
+
+		if (!current_user_can('publish_posts') && !SyncOptions::has_cap()) {
+			// user cannot publish posts and cannot access wpsitesync
 			$response->error_code(SyncApiRequest::ERROR_NO_PERMISSION, $operation);
 			$response->send();
 		}

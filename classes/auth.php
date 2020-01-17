@@ -74,7 +74,7 @@ class SyncAuth extends SyncInput
 			// we have a valid user - check additional requirements
 
 			// check capabilities
-			if (!$user_signon->has_cap('edit_posts')) {
+			if (!SyncOptions::has_cap($user_signon->ID) ) {
 //SyncDebug::log(__METHOD__.'():' . __LINE__ . ' does not have capability: edit_posts');
 				$resp->error_code(SyncApiRequest::ERROR_NO_PERMISSION);
 				return;

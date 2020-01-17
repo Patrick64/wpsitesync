@@ -175,7 +175,7 @@ class SyncOptions
 	 * Use settings to determine if user has access to WPSiteSync features #122
 	 * @return boolean TRUE if user is allowed, based on configuration and current role; otherwise FALSE
 	 */
-	public static function has_cap()
+	public static function has_cap($user_id = false)
 	{
 		if (is_multisite() && is_super_admin())					// always allow admins #244
 			return TRUE;
@@ -198,7 +198,7 @@ class SyncOptions
 				break;
 			}
 		}
-		$current_user = wp_get_current_user();
+		$current_user = $user_id ? get_user_by('ID',$user_id) : wp_get_current_user();
 		// check to see if current user's Role is in list of allowed roles #166
 //SyncDebug::log(__METHOD__.'():' . __LINE__ . ' roles=' . var_export($roles, TRUE));
 		foreach ($current_user->roles as $role)
