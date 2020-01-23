@@ -158,6 +158,7 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' updated "' . self::OPTION_ACTIVAT
 					`last_update`		DATETIME NOT NULL,
 					`wp_version`		VARCHAR(20) NOT NULL,
 					`sync_version`		VARCHAR(20) NOT NULL,
+					`last_sync`			DATETIME NULL,
 
 					PRIMARY KEY (`sync_id`),
 					INDEX `source_content_id` (`source_content_id`),

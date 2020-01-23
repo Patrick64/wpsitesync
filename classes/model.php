@@ -189,10 +189,10 @@ SyncDebug::log(__METHOD__.'() sql: ' . $sql . ' res=' . var_export($res, TRUE));
 	 */
 	public function get_sync_target_post($source_post_id, $target_site_key, $type = 'post')
 	{
-		if (defined('WP_DEBUG') && WP_DEBUG) {
-			if (!in_array($type, array('comment', 'post', 'term', 'user')))
-				throw new Exception('The $type passed to get_sync_data() is invalid');
-		}
+		// if (defined('WP_DEBUG') && WP_DEBUG) {
+		// 	if (!in_array($type, array('comment', 'post', 'term', 'user')))
+		// 		throw new Exception('The $type passed to get_sync_data() is invalid');
+		// }
 
 		$where = '';
 		if (NULL !== $type) {
@@ -284,7 +284,7 @@ SyncDebug::log(__METHOD__.'() post id=' . $post_id);
 			return $push_data;
 
 		$push_data['post_data'] = (array) $query->posts[0];
-		$push_data['sync_time'] = time();
+		$push_data['sync_time'] = date('Y-m-d H:i:s',time());
 		// other images connected to the current post ID.
 		if (function_exists('get_attached_media'))
 			$push_data['post_media'] = get_attached_media('', $post_id);
