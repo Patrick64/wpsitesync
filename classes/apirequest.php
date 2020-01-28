@@ -1338,7 +1338,7 @@ SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' done with "push_complete" API c
 	 * @param int $attach_id The post ID of the attachment being sent
 	 * @return boolean TRUE on successful add to API queue; otherwise FALSE
 	 */
-	public function send_media($url, $post_id, $thumbnail_id, $attach_id)
+	public function send_media($url, $post_id, $thumbnail_id, $attach_id, array $extra_post_fields = array())
 	{
 SyncDebug::log(__METHOD__ . "('{$url}', {$post_id}, {$thumbnail_id}, {$attach_id})");
 		// check to see if the media file should be sent to Target. Gives add-ons a chance to refuse sending specific images.
@@ -1368,7 +1368,7 @@ SyncDebug::log(__METHOD__ . '() src_parts[host]=' . $src_parts['host'] . ' sourc
 //		if ($src_parts['host'] === $this->_source_domain &&
 //			is_wp_error($this->upload_media($post_id, $path, NULL, $thumbnail_id == $post_id, $attach_id))) {
 		if ($src_parts['host'] === $this->_source_domain) {
-			$res = $this->upload_media($post_id, $path, NULL, $thumbnail_id == $attach_id /* $post_id #217 */, $attach_id);
+			$res = $this->upload_media($post_id, $path, NULL, $thumbnail_id == $attach_id /* $post_id #217 */, $attach_id,$extra_post_fields);
 			if (is_wp_error($res)) {
 SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' error on upload_media() returning FALSE');
 				return FALSE;
@@ -1398,7 +1398,7 @@ SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' *** no image file sent to targe
 	 * @param boolean $featured Flag if the image/media is the featured image
 	 * @param int $attach_id The post ID of the attachment being uploaded
 	 */
-	public function upload_media($post_id, $file_path, $target, $featured = FALSE, $attach_id = 0)
+	public function upload_media($post_id, $file_path, $target, $featured = FALSE, $attach_id = 0, $extra_post_fields = [])
 	{
 		// TODO: remove $target parameter
 SyncDebug::log(__METHOD__ . '() post_id=' . $post_id . ' path=' . $file_path . ' featured=' . ($featured ? 'TRUE' : 'FALSE') . ' attach_id=' . $attach_id, TRUE);
@@ -1434,6 +1434,7 @@ SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' ERROR: file "' . $file_path . '
 			'attach_name' => (NULL !== $attach_post) ? $attach_post->post_name : '',
 			'attach_alt' => (NULL !== $attach_post && !empty($attach_alt)) ? $attach_alt : '',
 		);
+		$post_fields = array_merge($post_fields,$extra_post_fields);
 		// allow extensions to include data in upload_media operations
 		$post_fields = apply_filters('spectrom_sync_upload_media_fields', $post_fields);
 SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' image post ' . $post_fields['img_path'] . '/' . $post_fields['img_name']);
