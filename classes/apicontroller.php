@@ -454,6 +454,7 @@ SyncDebug::log(__METHOD__ . '():' . __LINE__. '  performing sync');
 			'source_content_id' => $this->source_post_id,
 			'target_content_id' => $this->post_id,
 			'content_type' => 'post', // $content_type,
+			'target_site_key' => SyncOptions::get('site_key')
 			// 'last_sync' => isset($_POST['sync_time']) ? $_POST['sync_time'] : ''
 		);
 		$model->save_sync_data($save_sync);

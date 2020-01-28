@@ -189,10 +189,10 @@ SyncDebug::log(__METHOD__.'() sql: ' . $sql . ' res=' . var_export($res, TRUE));
 	 */
 	public function get_sync_target_post($source_post_id, $target_site_key, $type = 'post')
 	{
-		// if (defined('WP_DEBUG') && WP_DEBUG) {
-		// 	if (!in_array($type, array('comment', 'post', 'term', 'user')))
-		// 		throw new Exception('The $type passed to get_sync_data() is invalid');
-		// }
+		if (defined('WP_DEBUG') && WP_DEBUG) {
+			if (!in_array($type, array('comment', 'post', 'term', 'user')))
+				throw new Exception('The $type passed to get_sync_data() is invalid');
+		}
 
 		$where = '';
 		if (NULL !== $type) {
