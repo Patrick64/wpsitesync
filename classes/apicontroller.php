@@ -950,7 +950,7 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' source ref id (' . $source_ref_id
 
 										// update post ID reference with Target's ID then update Gutenberg Shared Block marker
 										$obj->id = $target_ref;
-										$new_obj_data = json_encode($obj);
+										$new_obj_data = json_encode($obj,JSON_PRETTY_PRINT);
 										$new_obj_len = strlen($new_obj_data);
 //SyncDebug::log(__METHOD__.'():' . __LINE__ . ' injecting new Gutenberg File Block object: "' . $new_obj_data . '" into content');
 										$content = substr($content, 0, $start) . $new_obj_data . substr($content, $end + 1);
@@ -963,15 +963,28 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' source ref id (' . $source_ref_id
 							default:
 SyncDebug::log(__METHOD__.'():' . __LINE__ . ' unrecognized block type "' . $block_name . '" - sending through filter');
 								// give others a chance to process this block
-								$new_content = apply_filters('spectrom_sync_process_gutenberg_block', $content, $block_name, $json, $target_post_id, $start, $end, $pos);
+
+								// this filter will return an $obj
+								// Then use $new_obj_data ... etc logic from above 
+								$new_obj = apply_filters('spectrom_sync_process_gutenberg_block_obj_on_target', $obj, $content, $block_name, $json, $target_post_id, $start, $end, $pos );
+								$new_obj_data = json_encode($new_obj,JSON_PRETTY_PRINT);
+								$new_obj_len = strlen($new_obj_data);
+//SyncDebug::log(__METHOD__.'():' . __LINE__ . ' injecting new Gutenberg File Block object: "' . $new_obj_data . '" into content');
+								$content = substr($content, 0, $start) . $new_obj_data . substr($content, $end + 1);
+								$updated = TRUE;
+								
+								
+								// $new_content = apply_filters('spectrom_sync_process_gutenberg_block', $content, $block_name, $json, $target_post_id, $start, $end, $pos);
+								
+								
 								// have to guess at new length of json object based on difference between old and new content
-								$new_obj_len = strlen($json) + (strlen($new_content) - strlen($content));
-								if ($content !== $new_content) {		// check to see if add-ons made any modifications
-									$content = $new_content;
-									$updated = TRUE;
-								}
-								unset($new_content);
-								break;
+								// $new_obj_len = strlen($json) + (strlen($new_content) - strlen($content));
+								// if ($content !== $new_content) {		// check to see if add-ons made any modifications
+								// 	$content = $new_content;
+								// 	$updated = TRUE;
+								// }
+								// unset($new_content);
+								
 							} // switch
 						} // NULL !== $obj
 
@@ -993,6 +1006,7 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' no json object in block');
 				} else { // FALSE !== $pos
 					$offset = $len + 1;			// indicate end of string/processing
 				}
+				$a=1;
 			} while ($offset < $len && !$error);
 
 			// if there were changes made to the content and no error occured- update the post_content with the changes
@@ -1012,7 +1026,7 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' updating ID=' . $target_post_id);
 					$esc_content = esc_sql($content);
 				}
 
-//SyncDebug::log(__METHOD__.'():' . __LINE__ . ' esc content=' . $esc_content);
+SyncDebug::log(__METHOD__.'():' . __LINE__ . " updating $target_post_id  content=" . $content);
 				$sql = "UPDATE `{$wpdb->posts}` SET `post_content`='" . $esc_content . "' WHERE `ID`={$target_post_id} LIMIT 1";
 				$res = $wpdb->query($sql);
 //clean_post_cache($target_post_id);
