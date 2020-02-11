@@ -65,11 +65,11 @@ class SyncDebug
 	{
 //		if (!self::$_debug && !defined('WP_DEBUG') || !WP_DEBUG)
 //			return;
-		if (class_exists('Rollbar\Rollbar')) {
+//		if (class_exists('Rollbar\Rollbar')) {
 			// $level = strpos($msg,'error') === false ? \Rollbar\Payload\Level::INFO : \Rollbar\Payload\Level::ERROR;
-			$level = \Rollbar\Payload\Level::INFO;
-			\Rollbar\Rollbar::log($level,$msg);
-		}
+//			$level = \Rollbar\Payload\Level::INFO;
+//			\Rollbar\Rollbar::log($level,$msg);
+//		}
 		if (self::$_debug_output)
 			echo $msg, PHP_EOL;
 
