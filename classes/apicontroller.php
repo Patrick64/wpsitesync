@@ -711,8 +711,11 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' ref data=' . var_export($ref_data
 										$target_ref = wp_insert_post($target_data);
 SyncDebug::log(__METHOD__.'():' . __LINE__ . ' have target post ID ' . $target_ref);
 										if (is_wp_error($target_ref)) {
+											// this will likely happen as it is run multiple times, only the first time will
+											// have the original reference as when it's run again we're looking at the changed reference.
 SyncDebug::log(__METHOD__.'():' . __LINE__ . ' error on Shared Block creation: ' . $target_ref->getMessage());
 											$target_ref = 0;
+											
 											// TODO: determine if there is a way to recover
 										} else {
 											$target_ref = abs($target_ref);
@@ -742,12 +745,14 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' error on Shared Block creation: '
 //SyncDebug::log(__METHOD__.'():' . __LINE__ . ' updated post #' . $target_ref . ' with content=' . $target_data['post_content']);
 									}
 									// update post ID reference with Target's ID then update Gutenberg Shared Block marker
-									$obj->ref = $target_ref;
-									$new_obj_data = json_encode($obj);
-									$new_obj_len = strlen($new_obj_data);
-//SyncDebug::log(__METHOD__.'():' . __LINE__ . ' injecting new Gutenberg Shared Block object: "' . $new_obj_data . '" into content');
-									$content = substr($content, 0, $start) . $new_obj_data . substr($content, $end + 1);
-									$updated = TRUE;
+									if ($target_ref) { // only update if we found the new target
+										$obj->ref = $target_ref;
+										$new_obj_data = json_encode($obj);
+										$new_obj_len = strlen($new_obj_data);
+	//SyncDebug::log(__METHOD__.'():' . __LINE__ . ' injecting new Gutenberg Shared Block object: "' . $new_obj_data . '" into content');
+										$content = substr($content, 0, $start) . $new_obj_data . substr($content, $end + 1);
+										$updated = TRUE;
+									}
 								} // 0 !== $source_ref_id
 								// TODO: error recovery
 								break;
