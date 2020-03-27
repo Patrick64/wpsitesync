@@ -89,8 +89,16 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' lookup post name "' . $post_name 
 				'numberposts' => 1,
 			);
 			$posts = get_posts($args);
-			if ($posts)
-				$target_post_id = abs($posts[0]->ID);
+			if ($posts) {
+				// go through matched posts to see if any of them have the same ID
+				// which is a good indication that it's the original post that's been cloned
+				foreach ($posts as $p) {
+					if ($p->ID == $post_data['ID']) {
+						$target_post_id = abs($p->ID);
+					}
+				}
+				if (!$target_post_id) $target_post_id = abs($posts[0]->ID);
+			}
 if (0 === $target_post_id)
 SyncDebug::log(__METHOD__.'():' . __LINE__ . ' not found by slug.');
 
