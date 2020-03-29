@@ -689,6 +689,9 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' found json string: "' . $json . '
 							// handle each Block Marker individually
 							switch ($block_name) {
 							case 'wp:block':							// Shared Block reference - post reference
+								
+								break; // HACK: sitesync messes up the reusable block IDs so don't bother
+
 								$source_ref_id = abs($obj->ref);
 //SyncDebug::log(__METHOD__.'():' . __LINE__ . ' found Shared Block reference: ' . $source_ref_id . ' at pos ' . $start);
 								if (0 !== $source_ref_id) {
