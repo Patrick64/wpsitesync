@@ -511,7 +511,8 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' response missing post id. cannot 
 							'content' => $response_data->content . '...', // substr(strip_tags($target_post->post_content), 0, 200) . '...',
 							'content_timeout' => current_time('timestamp') + self::CONTENT_TIMEOUT,
 						);
-						$meta_data = json_encode($content_data);
+						// wp_slash added to prevent json encoding bug https://wordpress.stackexchange.com/a/129155/169789
+						$meta_data = wp_slash(json_encode($content_data));
 						update_post_meta($post->ID, $meta_key, $meta_data);
 					}
 				} else {
