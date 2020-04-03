@@ -1413,6 +1413,11 @@ SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' file exists=' . (file_exists($f
 SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' ERROR: file "' . $file_path . '" not found');
 			return;
 		}
+
+		preg_match('/\/wp-content\/uploads\/(\d+)\/(\d+)\//',$file_path,$img_parts);
+		$img_year = $img_parts[1];
+		$img_month = $img_parts[2];
+
 		$attach_post = get_post($attach_id, OBJECT);
 		$attach_alt = get_post_meta($attach_id, '_wp_attachment_image_alt', TRUE);
 		$img_date = filemtime($file_path);
@@ -1424,8 +1429,8 @@ SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' ERROR: file "' . $file_path . '
 			'boundary' => wp_generate_password(24), // TODO: remove and generate when formatting POST content in _media()
 			'img_path' => dirname($file_path),
 			'img_name' => basename($file_path),
-			'img_year' => date('Y', $img_date),
-			'img_month' => date('m', $img_date),
+			'img_year' => $img_year,
+			'img_month' => $img_month,
 			'img_url' => (NULL !== $attach_post) ? $attach_post->guid : '',
 			'contents' => $this->_get_image_contents($file_path), // file_get_contents($file_path),
 			'attach_desc' => (NULL !== $attach_post) ? $attach_post->post_content : '',
