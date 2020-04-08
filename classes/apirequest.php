@@ -1347,7 +1347,8 @@ SyncDebug::log(__METHOD__ . "('{$url}', {$post_id}, {$thumbnail_id}, {$attach_id
 
 		if (in_array($url, $this->_sent_images)) {
 SyncDebug::log(__METHOD__ . '() already sent this image');
-			return TRUE;
+			// We still need to send this image in case there is extra info in the $extra_post_fields meta data
+			// return TRUE;
 		}
 		$this->_sent_images[] = $url;
 SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' added image #' . count($this->_sent_images) . ': ' . $url);
