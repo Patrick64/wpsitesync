@@ -846,7 +846,11 @@ SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' <img src="' . $src_attr . '" cl
 						// make sure it's a valid post and 'attachment ' type #162
 						if (NULL !== $img_post && 'attachment' === $img_post->post_type) {
 							// TODO: check image name as well?
-							$img_file = $img_post->guid;
+							// Fix for https://app.asana.com/0/1125293017623355/1187124246381958
+							// guid seems to be removing the last part of the filename
+							// PW 2020-08-02
+							// $img_file = $img_post->guid;
+							$img_file = wp_get_attachment_url($img_id);
 //SyncDebug::log(__METHOD__.'():' . __LINE__ . ' guid=' . $img_file);
 							if ($this->send_media($img_file, $post_id, $post_thumbnail_id, $img_id))
 								$src_attr = NULL;
