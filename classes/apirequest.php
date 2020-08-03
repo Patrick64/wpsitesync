@@ -908,14 +908,24 @@ SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' found ' . $tags->length . ' <a>
 				$href_attr = $anchor_node->getAttribute('href');
 //SyncDebug::log(__METHOD__.'() <a href="' . $href_attr . '"...>');
 				// verify that it's a reference to this site and it's a PDF
-				if (FALSE !== stripos($href_attr, $this->_source_domain) && 0 === strcasecmp(substr($href_attr, -4), '.pdf')) {
+				if ((stripos($href_attr,'/') === 0 || FALSE !== stripos($href_attr, $this->_source_domain))
+					&& 0 === strcasecmp(substr($href_attr, -4), '.pdf')) {
 //SyncDebug::log(__METHOD__.'() sending pdf attachment');
 					// look up attachment id
 					$attach_id = 0;
 					foreach ($post_children as $child_id => $child_post) {
-						if ($child_post->guid === $href_attr) {
+						// Amend to fix issue with pdf not uploading
+						// PW 2020-08-03
+						// https://app.asana.com/0/inbox/1125293017623352/1187124246381958/1187217637337584
+						if ($child_post->guid === $href_attr || wp_get_attachment_url($child_id) === $href_attr) {
 							$attach_id = $child_id;
 SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' - found pdf attachment id ' . $attach_id);
+							break;
+						} else if (str_replace(site_url(),'',wp_get_attachment_url($child_id)) === $href_attr) {
+							// found non-absolute url
+							$attach_id = $child_id;
+							$href_attr = site_url() . $href_attr;
+SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' - found relative pdf attachment id ' . $attach_id);
 							break;
 						}
 					}
