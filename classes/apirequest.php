@@ -1355,6 +1355,10 @@ SyncDebug::log(__METHOD__ . '():' . __LINE__ . ' done with "push_complete" API c
 	public function send_media($url, $post_id, $thumbnail_id, $attach_id, array $extra_post_fields = array())
 	{
 SyncDebug::log(__METHOD__ . "('{$url}', {$post_id}, {$thumbnail_id}, {$attach_id})");
+		// if image is too big wordpress will scale it down and add -scaled- to filename
+		// so we need to remove it
+		// PW 2020-08-09 https://app.asana.com/0/inbox/1125293017623352
+		$url = preg_replace('/-scaled-(.*)\.jpg/','.jpg',$url);
 		// check to see if the media file should be sent to Target. Gives add-ons a chance to refuse sending specific images.
 		if (FALSE === apply_filters('spectrom_sync_send_media_attachment', TRUE, $url, $attach_id))
 			return;
